@@ -8,11 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaskTwo {
-    private static final String PATH_TO_FILE = "D:\\newGoITProjects\\modul-9\\src\\main\\resources\\hw\\taskTwo\\file.txt";
-    private static final String PATH_TO_JSON_FILE = "D:\\newGoITProjects\\modul-9\\src\\main\\resources\\hw\\taskTwo\\user.json";
 
-    public static void main(String[] args) {
-        File file = new File(PATH_TO_FILE);
+    public static void createListObjFromFileToJson(String pathToIncomingFile, String pathToJsonFile) {
+        File file = new File(pathToIncomingFile);
         List<User> users = new ArrayList<>();
 
         if (file.exists() && file.isFile()) {
@@ -28,16 +26,18 @@ public class TaskTwo {
         }
 
         if (users.size() != 0) {
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(PATH_TO_JSON_FILE))) {
+            File fileToJson = new File(pathToJsonFile);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileToJson))) {
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
                 String json = gson.toJson(users);
                 bufferedWriter.write(json);
-
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
         }
-
     }
 }
 
