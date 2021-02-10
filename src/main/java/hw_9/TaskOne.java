@@ -32,6 +32,8 @@ public class TaskOne {
                     System.out.println(line);
                 }
             }
+        }else{
+            System.out.println("Invalid path to file");
         }
     }
 }

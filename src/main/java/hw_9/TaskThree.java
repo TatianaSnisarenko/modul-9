@@ -47,6 +47,8 @@ public class TaskThree {
                 Integer value = entry.getValue();
                 System.out.println(key + " " + value);
             }
+        }else{
+            System.out.println("Invalid path to file");
         }
 
     }

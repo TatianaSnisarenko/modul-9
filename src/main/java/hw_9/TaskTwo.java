@@ -23,6 +23,9 @@ public class TaskTwo {
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
+        }else{
+            System.out.println("Invalid path to file");
+            return;
         }
 
         if (users.size() != 0) {
