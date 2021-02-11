@@ -31,7 +31,7 @@ public class TaskTwo {
         if (users.size() != 0) {
             File fileToJson = new File(pathToJsonFile);
             if (!file.exists()) {
-                file.mkdirs();
+                file.getParentFile().mkdirs();
             }
             try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileToJson))) {
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
