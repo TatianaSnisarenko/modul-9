@@ -12,44 +12,42 @@ public class TaskThree {
         File file = new File(path);
         StringBuilder sb = new StringBuilder();
         if (file.exists() && file.isFile()) {
-            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-                String line = null;
-                while ((line = bufferedReader.readLine()) != null) {
-                    sb.append(line.strip());
-                    sb.append(" ");
-                }
-
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
-            }
-            String text = sb.toString();
-
-            text = text.replaceAll("\\s+", " ");
-            String[] parts = text.split(" ");
-            Map<String, Integer> wordsWithCount = new HashMap<>();
-            Set<String> wordsSet = new HashSet<>();
-            for (String part : parts) {
-                wordsSet.add(part);
-            }
-            List<String> allWords = new ArrayList<>(Arrays.asList(parts));
-            for (String uniqueWord : wordsSet) {
-                wordsWithCount.put(uniqueWord, Collections.frequency(allWords, uniqueWord));
-            }
-            List<Map.Entry<String, Integer>> entryList = new ArrayList<>(wordsWithCount.entrySet());
-            Collections.sort(entryList, new Comparator<Map.Entry<String, Integer>>() {
-                @Override
-                public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {
-                    return o2.getValue().compareTo(o1.getValue());
-                }
-            });
-            for (Map.Entry<String, Integer> entry : entryList) {
-                String key = entry.getKey();
-                Integer value = entry.getValue();
-                System.out.println(key + " " + value);
-            }
-        }else{
+            String[] parts = readTextFileToArrayOfStrings(file, sb);
+            List<Map.Entry<String, Integer>> entryList = getSortedFrequencyOfWordsInArrayOfStrings(parts);
+            entryList.forEach(entry -> System.out.println(entry.getKey() + " " + entry.getValue()));
+        } else {
             System.out.println("Invalid path to file");
         }
+    }
 
+    private static List<Map.Entry<String, Integer>> getSortedFrequencyOfWordsInArrayOfStrings(String[] parts) {
+        Map<String, Integer> wordsWithCount = new HashMap<>();
+        Set<String> wordsSet = new HashSet<>();
+        List<String> allWords = new ArrayList<>(Arrays.asList(parts));
+        for (String part : parts) {
+            if (!wordsSet.contains(part)) {
+                wordsSet.add(part);
+                wordsWithCount.put(part, Collections.frequency(allWords, part));
+            }
+        }
+        List<Map.Entry<String, Integer>> entryList = new ArrayList<>(wordsWithCount.entrySet());
+        entryList.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+        return entryList;
+    }
+
+    private static String[] readTextFileToArrayOfStrings(File file, StringBuilder sb) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            String line = null;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line.strip());
+                sb.append(" ");
+            }
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+        String text = sb.toString();
+        text = text.replaceAll("\\s+", " ");
+        String[] parts = text.split(" ");
+        return parts;
     }
 }

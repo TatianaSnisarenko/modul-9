@@ -13,6 +13,28 @@ public class TaskTwo {
         File file = new File(pathToIncomingFile);
         List<User> users = new ArrayList<>();
 
+        if (!extractDataFromFileToList(file, users)) return;
+
+        if (users.size() != 0) {
+            convertListOfUsersToJsonFile(pathToJsonFile, file, users);
+        }
+    }
+
+    private static void convertListOfUsersToJsonFile(String pathToJsonFile, File file, List<User> users) {
+        File fileToJson = new File(pathToJsonFile);
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+        }
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileToJson))) {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            String json = gson.toJson(users);
+            bufferedWriter.write(json);
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    private static boolean extractDataFromFileToList(File file, List<User> users) {
         if (file.exists() && file.isFile()) {
             try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
                 String line = bufferedReader.readLine();
@@ -23,24 +45,11 @@ public class TaskTwo {
             } catch (IOException e) {
                 System.err.println(e.getMessage());
             }
-        }else{
+        } else {
             System.out.println("Invalid path to file");
-            return;
+            return false;
         }
-
-        if (users.size() != 0) {
-            File fileToJson = new File(pathToJsonFile);
-            if (!file.exists()) {
-                file.getParentFile().mkdirs();
-            }
-            try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileToJson))) {
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                String json = gson.toJson(users);
-                bufferedWriter.write(json);
-            } catch (IOException e) {
-                System.err.println(e.getMessage());
-            }
-        }
+        return true;
     }
 }
 
